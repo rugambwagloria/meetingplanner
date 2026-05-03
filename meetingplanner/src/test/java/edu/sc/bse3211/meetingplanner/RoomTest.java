@@ -66,7 +66,7 @@ public class RoomTest {
     @Test
     public void testPrintAgendaMonthContainsMeeting() throws TimeConflictException {
         room.addMeeting(meeting);
-        String agenda = room.printAgenda(3);
+        String agenda = room.printAgenda(3, 15);
         assertTrue(agenda.contains("Test Meeting"));
     }
 

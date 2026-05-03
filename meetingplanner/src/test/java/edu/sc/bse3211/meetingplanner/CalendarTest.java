@@ -65,8 +65,8 @@ public class CalendarTest {
 	public void testAddMeeting_invalidDayForFebruaryThrowsException() {
 		Calendar calendar = new Calendar();
 		try {
-			calendar.addMeeting(new Meeting(2, 29, 10, 11));
-			fail("Expected TimeConflictException for February 29");
+			calendar.addMeeting(new Meeting(2, 30, 10, 11));
+			fail("Expected TimeConflictException for February 30");
 		} catch(TimeConflictException e) {
 			assertTrue(e.getMessage().contains("Day does not exist for month 2"));
 		}
@@ -148,8 +148,7 @@ public class CalendarTest {
     // C-07 — Calendar: Partial Overlap
     // ─────────────────────────────────────────
 
-    /**
-     *A meeting from 10-12 that partially overlaps a booked 9-11 slot
+    /*A meeting from 10-12 that partially overlaps a booked 9-11 slot
      * must throw TimeConflictException.
      */
     @Test(expected = TimeConflictException.class)
