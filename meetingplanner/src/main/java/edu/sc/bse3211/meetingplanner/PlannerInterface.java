@@ -183,24 +183,53 @@ public class PlannerInterface {
             return;
         }
 
-        //Read in person names
-        ArrayList<Person> attendees = new ArrayList<Person>();
-        String name = inputOutput("\nEnter a person's name, or cancel to cancel the request: ").trim();
-        Person who = null;
-        if (!name.equals("cancel")) {
-            try {
-                who = org.getEmployee(name);
-                attendees.add(who);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+        // Replace the single-person block in scheduleMeeting() with:
+        ArrayList<Person> attendees = new ArrayList<>();
+        String name;
+        while (true) {
+            name = inputOutput("\nEnter a person's name (or 'done' to finish, 'cancel' to abort): ").trim();
+            if (name.equals("cancel")) {
                 this.mainMenu();
                 return;
             }
-        } else {
+            if (name.equals("done")) {
+                break;
+            }
+            try {
+                Person who = org.getEmployee(name);
+                if (!attendees.contains(who)) {   // guards against M-05 duplicate
+                    attendees.add(who);
+                    System.out.println(who.getName() + " added.");
+                } else {
+                    System.out.println(who.getName() + " is already in the attendee list.");
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        if (attendees.isEmpty()) {
+            System.out.println("A meeting must have at least one attendee.");
             this.mainMenu();
             return;
         }
 
+        // //Read in person names
+        // ArrayList<Person> attendees = new ArrayList<Person>();
+        // String name = inputOutput("\nEnter a person's name, or cancel to cancel the request: ").trim();
+        // Person who = null;
+        // if (!name.equals("cancel")) {
+        //     try {
+        //         who = org.getEmployee(name);
+        //         attendees.add(who);
+        //     } catch (Exception e) {
+        //         System.out.println(e.getMessage());
+        //         this.mainMenu();
+        //         return;
+        //     }
+        // } else {
+        //     this.mainMenu();
+        //     return;
+        // }
         //Read in description
         String description = inputOutput("\nEnter a description for the meeting: ");
 
@@ -454,7 +483,7 @@ public class PlannerInterface {
                     int d = Integer.parseInt(day);
                     System.out.println(who.printAgenda(month, d));
                 } else {
-                    System.out.println(who.printAgenda(month));
+                    System.out.println(who.printAgenda(month, 0));
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());

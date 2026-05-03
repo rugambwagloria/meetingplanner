@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class RoomTest {
     private Room room;
     private Meeting meeting;
+    private ArrayList<Person> attendees;
 
     @Before
     public void setUp() {
@@ -89,4 +90,37 @@ public class RoomTest {
         room.removeMeeting(3, 15, 0);
         assertFalse(room.isBusy(3, 15, 9, 10));
     }
+    // AVAILABILITY CHECKS — isBusy
+    // ─────────────────────────────────────────
+
+    @Test
+    public void testIsBusy_NoMeetingsBooked_ReturnsFalse() throws TimeConflictException {
+        assertFalse(
+            "Room with no bookings should not be busy",
+            room.isBusy(3, 15, 9, 10)
+        );
+    }
+
+    @Test
+    public void testIsBusy_AdjacentSlot_ReturnsFalse() throws TimeConflictException {
+        Meeting m = new Meeting(3, 15, 9, 10, attendees, room, "Morning");
+        room.addMeeting(m);
+
+        assertFalse(
+            "Room should be free in the slot immediately after a booking",
+            room.isBusy(3, 15, 10, 11)
+        );
+    }
+
+    @Test
+    public void testIsBusy_DifferentDay_ReturnsFalse() throws TimeConflictException {
+        Meeting m = new Meeting(3, 15, 9, 10, attendees, room, "Monday");
+        room.addMeeting(m);
+
+        assertFalse(
+            "Room on a different day should not be affected by a booking",
+            room.isBusy(3, 16, 9, 10)
+        );
+    }
+
 }

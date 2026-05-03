@@ -2,6 +2,7 @@ package edu.sc.bse3211.meetingplanner;
 
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,4 +42,29 @@ public class PersonTest {
         employee.addMeeting(first);
         employee.addMeeting(second); // must throw TimeConflictException
     }
+
+     // ─────────────────────────────────────────
+    // AGENDA PRINTING
+    // ─────────────────────────────────────────
+
+    @Test
+    public void testPrintAgenda_ReturnsNonNull() throws TimeConflictException {
+        String agenda = room.printAgenda(3, 15);
+        assertNotNull("printAgenda should never return null", agenda);
+    }
+
+    @Test
+    public void testPrintAgenda_MultipleBookings_AllAppearInOutput()
+            throws TimeConflictException {
+        Meeting m1 = new Meeting(3, 15, 9,  10, attendees, room, "Meeting Alpha");
+        Meeting m2 = new Meeting(3, 15, 11, 12, attendees, room, "Meeting Beta");
+        room.addMeeting(m1);
+        room.addMeeting(m2);
+
+        String agenda = room.printAgenda(3, 15);
+        assertTrue("Alpha should appear in agenda", agenda.contains("Meeting Alpha"));
+        assertTrue("Beta should appear in agenda",  agenda.contains("Meeting Beta"));
+    }
+
+    
 }

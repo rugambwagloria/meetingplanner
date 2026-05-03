@@ -28,6 +28,7 @@ public class Meeting {
 		this.day=day;
 		this.start=0;
 		this.end=23;
+		this.attendees = new ArrayList<>();
 	}
 	
 	/**
@@ -43,6 +44,7 @@ public class Meeting {
 		this.start=0;
 		this.end=23;
 		this.description= description;
+		this.attendees = new ArrayList<>();
 	}
 	
 	/**
@@ -57,6 +59,7 @@ public class Meeting {
 		this.day=day;
 		this.start=start;
 		this.end=end;
+		this.attendees = new ArrayList<>(); 
 	}
 	
 	/**
@@ -70,23 +73,26 @@ public class Meeting {
 	 * @param description - A description of the meeting.
 	 */
 	public Meeting(int month, int day, int start, int end, ArrayList<Person> attendees, Room room, String description){
-		this.month=month;
-		this.day=day;
-		this.start=start;
-		this.end=end;
-		this.attendees = attendees;
-		this.room = room;
-		this.description = description;
-	}
-
+    this.month = month;
+    this.day = day;
+    this.start = start;
+    this.end = end;
+    this.attendees = (attendees != null) ? attendees : new ArrayList<Person>();
+    this.room = room;
+    this.description = description;
+}
 	/**
 	 * Add an attendee to the meeting.
 	 * @param attendee - The person to add.
 	 */
 	public void addAttendee(Person attendee) {
-		this.attendees.add(attendee);
-	}
-	
+    if (attendee == null) {
+        throw new IllegalArgumentException("Attendee cannot be null");
+    }
+    if (!this.attendees.contains(attendee)) {
+        this.attendees.add(attendee);
+    }
+}
 	/**
 	 * Removes an attendee from the meeting.
 	 * @param attendee - The person to remove.
@@ -100,17 +106,21 @@ public class Meeting {
 	 * @return String - Information about the meeting.
 	 */
 	public String toString(){
-		String info=month+"/"+day+", "+start+" - "+end+","+room.getID()+": "+description+"\nAttending: ";
-		
-		for(Person attendee : attendees){
-			info=info+attendee.getName()+",";
-		}
-		
-		info=info.substring(0,info.length()-1);
-		
-		return info;
-	}
-	
+    String roomID = (room != null) ? room.getID() : "No Room";
+    String info = month+"/"+day+", "+start+" - "+end+","+roomID+": "+description+"\nAttending: ";
+
+    if (attendees == null || attendees.isEmpty()) {
+        return info + "None";
+    }
+
+    for(Person attendee : attendees){
+        info=info+attendee.getName()+",";
+    }
+
+    info=info.substring(0,info.length()-1);
+
+    return info;
+}
 	/**
 	 * Getters and Setters
 	 */
